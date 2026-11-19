@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import RevealOnScroll from './RevealOnScroll'
 
 export default function OfferingDetailsPage({ detail, kind, basePath, backLabel, ctaLabel }) {
   const kindLabel = kind.toUpperCase()
@@ -31,7 +32,7 @@ export default function OfferingDetailsPage({ detail, kind, basePath, backLabel,
             <p>{detail.overview}</p>
             <h3>Challenges it can address</h3>
             <ul className="project-detail-problems">
-              {detail.problems.map((problem) => <li key={problem}><span aria-hidden="true">↗</span>{problem}</li>)}
+              {detail.problems.map((problem, index) => <RevealOnScroll as="li" order={index} key={problem}><span aria-hidden="true">↗</span>{problem}</RevealOnScroll>)}
             </ul>
           </div>
         </section>
@@ -43,18 +44,18 @@ export default function OfferingDetailsPage({ detail, kind, basePath, backLabel,
           </div>
           <div className="project-detail-feature-grid">
             {detail.features.map(([title, description], index) => (
-              <article className="project-detail-feature" key={title}>
+              <RevealOnScroll as="article" className="project-detail-feature" order={index} key={title}>
                 <span className="project-detail-feature-number">0{index + 1}</span>
                 <h3>{title}</h3>
                 <p>{description}</p>
-              </article>
+              </RevealOnScroll>
             ))}
           </div>
         </section>
 
         <section className="service-detail-use-cases" aria-labelledby={`${kind}-use-cases-title`}>
           <div><span className="project-detail-kicker">BUSINESS VALUE</span><h2 id={`${kind}-use-cases-title`}>Benefits and use cases</h2></div>
-          <ul>{detail.useCases.map((useCase) => <li key={useCase}>{useCase}</li>)}</ul>
+          <ul>{detail.useCases.map((useCase, index) => <RevealOnScroll as="li" order={index} key={useCase}>{useCase}</RevealOnScroll>)}</ul>
         </section>
 
         <section className="service-detail-process" aria-labelledby={`${kind}-process-title`}>
@@ -64,7 +65,7 @@ export default function OfferingDetailsPage({ detail, kind, basePath, backLabel,
           </div>
           <div className="service-detail-process-grid">
             {detail.process.map(([title, description], index) => (
-              <article key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{description}</p></article>
+              <RevealOnScroll as="article" order={index} key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{description}</p></RevealOnScroll>
             ))}
           </div>
         </section>
@@ -76,10 +77,10 @@ export default function OfferingDetailsPage({ detail, kind, basePath, backLabel,
           </div>
           <div className="project-detail-gallery-grid">
             {detail.gallery.map((item, index) => (
-              <figure className="project-detail-gallery-item" key={item.src}>
+              <RevealOnScroll as="figure" className="project-detail-gallery-item" order={index} key={item.src}>
                 <div className="project-detail-gallery-image"><img src={item.src} alt={item.alt} loading={index === 0 ? 'eager' : 'lazy'} /></div>
                 <figcaption><span>0{index + 1}</span>{item.caption}</figcaption>
-              </figure>
+              </RevealOnScroll>
             ))}
           </div>
         </section>
@@ -87,7 +88,7 @@ export default function OfferingDetailsPage({ detail, kind, basePath, backLabel,
         <section className="project-detail-stack" aria-labelledby={`${kind}-stack-title`}>
           <div><span className="project-detail-kicker">TECHNOLOGIES &amp; INTEGRATIONS</span><h2 id={`${kind}-stack-title`}>A foundation suited to the work.</h2></div>
           <div className="project-detail-stack-list" aria-label="Relevant technologies and integrations">
-            {detail.stack.map((technology) => <span key={technology}>{technology}</span>)}
+            {detail.stack.map((technology, index) => <RevealOnScroll as="span" className="detail-stack-item" order={index} key={technology}>{technology}</RevealOnScroll>)}
           </div>
         </section>
 

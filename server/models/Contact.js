@@ -1,4 +1,3 @@
-// Placeholder Mongoose model for future use
 const mongoose = require('mongoose')
 
 const ContactSchema = new mongoose.Schema({

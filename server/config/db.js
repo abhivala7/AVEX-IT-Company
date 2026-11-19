@@ -1,4 +1,3 @@
-// Placeholder DB helper
 const mongoose = require('mongoose')
 
 async function connect(uri) {

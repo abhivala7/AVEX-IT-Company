@@ -7,7 +7,9 @@ export default function Footer() {
     <footer className="site-footer footer-premium" role="contentinfo">
       <div className="footer-inner footer-premium-inner">
         <div className="brand-col">
-          <Link className="brand" to="/" aria-label="AVEX home">AVEX</Link>
+          <Link className="brand" to="/" aria-label="AVEX home">
+            <img className="brand-logo" src="/images/avex-logo-on-black.png" alt="" />
+          </Link>
           <p className="muted">Thoughtful digital products and technology solutions for growing businesses.</p>
           <div className="footer-capability-line" aria-label="Digital engineering, software, technology">
             <span>Digital Engineering</span><i aria-hidden="true">·</i>

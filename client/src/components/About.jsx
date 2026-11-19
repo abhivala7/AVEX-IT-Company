@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import LineReveal from '../components/LineReveal'
-import RevealOnScroll from '../components/RevealOnScroll'
 
 export default function About() {
   return (
@@ -40,30 +39,6 @@ export default function About() {
             </div>
           </figure>
         </div>
-
-        <section className="about-approach about-reveal" aria-labelledby="about-approach-heading">
-          <div className="about-approach-heading">
-            <div className="eyebrow">OUR APPROACH</div>
-            <h3 id="about-approach-heading"><LineReveal text="Thoughtful at every layer." /></h3>
-          </div>
-          <div className="about-feature-grid">
-            <RevealOnScroll as="article" className="about-feature" order={0}>
-              <span className="about-feature-index">01 / ENGINEERING</span>
-              <h4><LineReveal text="Strong foundations" /></h4>
-              <p><LineReveal text="Modern engineering and reliable solutions, built with care." /></p>
-            </RevealOnScroll>
-            <RevealOnScroll as="article" className="about-feature" order={1}>
-              <span className="about-feature-index">02 / DESIGN</span>
-              <h4><LineReveal text="Thoughtful design" /></h4>
-              <p><LineReveal text="Clear digital experiences shaped around people and their needs." /></p>
-            </RevealOnScroll>
-            <RevealOnScroll as="article" className="about-feature" order={2}>
-              <span className="about-feature-index">03 / STRATEGY</span>
-              <h4><LineReveal text="Practical technology" /></h4>
-              <p><LineReveal text="Pragmatic technology strategy that supports real workflows." /></p>
-            </RevealOnScroll>
-          </div>
-        </section>
 
         <div className="about-closing about-reveal">
           <p><LineReveal text="Technology should make business simpler, not more complicated." /></p>

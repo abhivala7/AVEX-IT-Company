@@ -1,14 +1,13 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import LineReveal from './LineReveal'
+import RevealOnScroll from './RevealOnScroll'
 
 const recognition = [
-  { number: '01', title: 'Digital products', detail: 'Websites, applications, and software.' },
-  { number: '02', title: 'Thoughtful engineering', detail: 'Clear design with reliable foundations.' },
-  { number: '03', title: 'Practical technology', detail: 'Solutions shaped around real workflows.' },
+  { number: '01', title: 'Digital products', detail: 'Websites, applications, and software.', href: '/services', action: 'Explore services' },
+  { number: '02', title: 'Thoughtful engineering', detail: 'Clear design with reliable foundations.', href: '/about', action: 'About AVEX' },
+  { number: '03', title: 'Practical technology', detail: 'Solutions shaped around real workflows.', href: '/solutions', action: 'Explore solutions' },
 ]
-
-const clients = ['Northstar', 'Meridian', 'Forma', 'Aperture', 'Fieldnote']
 
 const technologyGroups = [
   { name: 'Frontend', items: ['React', 'JavaScript', 'TypeScript', 'Next.js'] },
@@ -39,11 +38,63 @@ const testimonials = [
 ]
 
 const reasons = [
-  { title: 'Smart Solutions', detail: 'Practical solutions based on real business needs.' },
-  { title: 'Fast Execution', detail: 'Efficient development without compromising quality.' },
-  { title: 'Secure & Scalable', detail: 'Reliable technology ready for future growth.' },
-  { title: 'Dedicated Support', detail: 'Continuous support even after launch.' },
+  { title: 'Smart Solutions', detail: 'Practical solutions based on real business needs.', href: '/solutions', action: 'Explore solutions' },
+  { title: 'Fast Execution', detail: 'Efficient development without compromising quality.', href: '/services', action: 'Explore services' },
+  { title: 'Secure & Scalable', detail: 'Reliable technology ready for future growth.', href: '/solutions', action: 'Explore solutions' },
+  { title: 'Dedicated Support', detail: 'Continuous support even after launch.', href: '/contact', action: 'Contact AVEX' },
 ]
+
+function DetailDialog({ item, titleId, onClose }) {
+  const dialogRef = useRef(null)
+  const closeTimer = useRef(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    if (!item || !dialogRef.current) return undefined
+    if (!dialogRef.current.open) dialogRef.current.showModal()
+    const frame = window.requestAnimationFrame(() => setIsVisible(true))
+    return () => window.cancelAnimationFrame(frame)
+  }, [item])
+
+  useEffect(() => () => window.clearTimeout(closeTimer.current), [])
+
+  const close = () => {
+    if (closeTimer.current) return
+    setIsVisible(false)
+    closeTimer.current = window.setTimeout(() => {
+      dialogRef.current?.close()
+      closeTimer.current = null
+      onClose()
+    }, 180)
+  }
+
+  const handleCancel = (event) => {
+    event.preventDefault()
+    close()
+  }
+
+  if (!item) return null
+
+  return (
+    <dialog
+      ref={dialogRef}
+      className={`section-detail-dialog${isVisible ? ' is-visible' : ''}`}
+      aria-labelledby={titleId}
+      onCancel={handleCancel}
+      onMouseDown={(event) => { if (event.target === dialogRef.current) close() }}
+    >
+      <div className="section-detail-dialog-card">
+        <button className="section-detail-close" type="button" onClick={close} aria-label="Close details">×</button>
+        <span className="section-detail-kicker">AVEX / APPROACH</span>
+        <h3 id={titleId}>{item.title}</h3>
+        <p>{item.detail}</p>
+        <Link className="section-detail-link" to={item.href} onClick={close}>
+          {item.action}<span aria-hidden="true">→</span>
+        </Link>
+      </div>
+    </dialog>
+  )
+}
 
 const statistics = [
   { value: 6, label: 'Services offered' },
@@ -66,35 +117,26 @@ const process = [
 ]
 
 export function Recognition() {
+  const [selectedItem, setSelectedItem] = useState(null)
+
   return (
     <section className="section avex-addition recognition" aria-labelledby="recognition-heading">
       <div className="section-inner">
-        <h2 className="section-title" id="recognition-heading"><LineReveal text="A clear, practical approach to technology." /></h2>
+        <RevealOnScroll as="h2" className="section-title" id="recognition-heading"><LineReveal text="A clear, practical approach to technology." /></RevealOnScroll>
         <div className="recognition-grid">
-          {recognition.map((item) => (
-            <div className="recognition-item" key={item.title}>
+          {recognition.map((item, index) => (
+            <RevealOnScroll as="article" className="recognition-item" order={index} key={item.title}>
               <span className="recognition-index">{item.number}</span>
               <h3><LineReveal text={item.title} /></h3>
               <p><LineReveal text={item.detail} /></p>
-            </div>
+              <span className="recognition-hover-hint" aria-hidden="true">View details <span>↗</span></span>
+              <button className="section-card-arrow" type="button" aria-label={`More about ${item.title}`} onClick={() => setSelectedItem(item)}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+              </button>
+            </RevealOnScroll>
           ))}
         </div>
-      </div>
-    </section>
-  )
-}
-
-export function Clients() {
-  return (
-    <section className="section avex-addition clients" aria-labelledby="clients-heading">
-      <div className="section-inner">
-        <div className="addition-heading">
-          <div className="eyebrow">ILLUSTRATIVE DEMO CONTENT</div>
-          <h2 className="section-title" id="clients-heading"><LineReveal text="Example Client Names." /></h2>
-        </div>
-        <div className="client-list" aria-label="Illustrative client name placeholders">
-          {clients.map((client) => <span key={client}>{client}</span>)}
-        </div>
+        <DetailDialog item={selectedItem} titleId="recognition-dialog-title" onClose={() => setSelectedItem(null)} />
       </div>
     </section>
   )
@@ -109,13 +151,13 @@ export function Technology() {
           <h2 className="section-title" id="technology-heading"><LineReveal text="Technology for practical digital products." /></h2>
         </div>
         <div className="technology-grid">
-          {technologyGroups.map((group) => (
-            <section className="technology-group" key={group.name} aria-label={group.name}>
+          {technologyGroups.map((group, index) => (
+            <RevealOnScroll as="section" className="technology-group" order={index} key={group.name} aria-label={group.name}>
               <h3><LineReveal text={group.name} /></h3>
               <div className="technology-tags">
-                {group.items.map((item) => <span key={item}>{item}</span>)}
+                {group.items.map((item, tagIndex) => <RevealOnScroll as="span" order={tagIndex} key={item}>{item}</RevealOnScroll>)}
               </div>
-            </section>
+            </RevealOnScroll>
           ))}
         </div>
       </div>
@@ -133,14 +175,14 @@ export function Testimonials() {
         <p className="section-sub demo-disclaimer"><LineReveal text="Fictional examples for layout demonstration; these are not real client endorsements." /></p>
         </div>
         <div className="testimonial-grid">
-          {testimonials.map((item) => (
-            <figure className="testimonial" key={item.name}>
+          {testimonials.map((item, index) => (
+            <RevealOnScroll as="figure" className="testimonial" order={index} key={item.name}>
               <blockquote><LineReveal text={item.review} /></blockquote>
               <figcaption>
                 <strong>{item.name}</strong>
                 <span>{item.role}</span>
               </figcaption>
-            </figure>
+            </RevealOnScroll>
           ))}
         </div>
       </div>
@@ -149,22 +191,29 @@ export function Testimonials() {
 }
 
 export function WhyChooseUs() {
+  const [selectedItem, setSelectedItem] = useState(null)
+
   return (
     <section className="section avex-addition why-us" aria-labelledby="why-us-heading">
       <div className="section-inner">
-        <div className="addition-heading">
+        <RevealOnScroll className="addition-heading" order={0}>
           <div className="eyebrow">THE AVEX APPROACH</div>
           <h2 className="section-title" id="why-us-heading"><LineReveal text="Why Businesses Choose Us." /></h2>
-        </div>
+        </RevealOnScroll>
         <div className="reason-grid">
           {reasons.map((item, index) => (
-            <article className="reason-item" key={item.title}>
+            <RevealOnScroll as="article" className="reason-item" order={index + 1} key={item.title}>
               <span className="reason-number">0{index + 1}</span>
               <h3><LineReveal text={item.title} /></h3>
               <p><LineReveal text={item.detail} /></p>
-            </article>
+              <span className="reason-hover-hint" aria-hidden="true">View details <span>↗</span></span>
+              <button className="section-card-arrow" type="button" aria-label={`More about ${item.title}`} onClick={() => setSelectedItem(item)}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+              </button>
+            </RevealOnScroll>
           ))}
         </div>
+        <DetailDialog item={selectedItem} titleId="reason-dialog-title" onClose={() => setSelectedItem(null)} />
       </div>
     </section>
   )
@@ -247,12 +296,12 @@ export function DevelopmentProcess() {
           <h2 className="section-title" id="process-heading"><LineReveal text="How We Turn Ideas Into Reality." /></h2>
         </div>
         <div className="process-grid">
-          {process.map((step) => (
-            <article className="process-step" key={step.number}>
+          {process.map((step, index) => (
+            <RevealOnScroll as="article" className="process-step" order={index} key={step.number}>
               <span>{step.number}</span>
               <h3><LineReveal text={step.title} /></h3>
               <p><LineReveal text={step.detail} /></p>
-            </article>
+            </RevealOnScroll>
           ))}
         </div>
       </div>
@@ -264,16 +313,16 @@ export function ProjectCta({ home = false }) {
   return (
     <section className={`section avex-addition project-cta${home ? ' home-cta' : ''}`} aria-labelledby="project-cta-heading">
       <div className="section-inner project-cta-inner">
-        <div>
+        <RevealOnScroll className="project-cta-copy" order={0}>
           <div className="eyebrow">LET'S MAKE IT REAL</div>
           <h2 id="project-cta-heading"><LineReveal text="Have An Idea? Let's Build Something Great Together." /></h2>
           <p><LineReveal text="Tell us about your project and let AVEX help turn your idea into a scalable digital solution." /></p>
           {home && <span className="home-cta-signoff">AVEX / DIGITAL ENGINEERING</span>}
-        </div>
-        <div className="project-cta-actions">
+        </RevealOnScroll>
+        <RevealOnScroll className="project-cta-actions" order={1}>
           <Link className="btn primary" to="/contact">Start Your Project</Link>
           <Link className="btn outline" to="/contact">Talk To Our Team</Link>
-        </div>
+        </RevealOnScroll>
       </div>
     </section>
   )
@@ -281,14 +330,8 @@ export function ProjectCta({ home = false }) {
 
 export function CloudInfrastructure() {
   return (
-    <section className="section avex-addition cloud-infrastructure" aria-labelledby="cloud-heading">
+    <section className="section avex-addition cloud-infrastructure" aria-label="Delivery pipeline">
       <div className="section-inner cloud-layout">
-        <div className="cloud-copy">
-          <div className="eyebrow">CLOUD &amp; INFRASTRUCTURE</div>
-          <h2 className="section-title" id="cloud-heading"><LineReveal text="A dependable foundation for every digital product." /></h2>
-          <p className="section-sub"><LineReveal text="Plan, deploy, and operate secure cloud environments with a focus on reliability, maintainability, and room to grow." /></p>
-          <Link className="text-link" to="/services">Explore cloud capabilities <span aria-hidden="true">→</span></Link>
-        </div>
         <div className="cloud-diagram" aria-label="Illustrative cloud delivery diagram">
           <span className="cloud-diagram-label">DELIVERY / PIPELINE</span>
           <div className="cloud-flow"><span>CODE</span><i aria-hidden="true">→</i><span>BUILD</span><i aria-hidden="true">→</i><span>DEPLOY</span></div>
@@ -309,13 +352,13 @@ export function TeamMembers() {
           <p className="section-sub demo-disclaimer"><LineReveal text="Demo roles and CSS-made profile illustrations; these do not represent named AVEX employees." /></p>
         </div>
         <div className="team-grid">
-          {team.map((member) => (
-            <article className="team-card" key={member.role}>
+          {team.map((member, index) => (
+            <RevealOnScroll as="article" className="team-card" order={index} key={member.role}>
               <div className="team-visual"><img src={`/images/team/${member.image}`} alt={member.alt} loading="eager" decoding="async" /></div>
               <h3><LineReveal text={member.role} /></h3>
               <p><LineReveal text={member.focus} /></p>
               <span className="team-demo-label">ILLUSTRATIVE PROFILE</span>
-            </article>
+            </RevealOnScroll>
           ))}
         </div>
       </div>

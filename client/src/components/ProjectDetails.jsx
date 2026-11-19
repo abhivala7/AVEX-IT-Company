@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
+import RevealOnScroll from './RevealOnScroll'
 
 const projectDetails = {
   'enterprise-portal': {
@@ -90,7 +91,7 @@ export default function ProjectDetails() {
             <p>{project.overview}</p>
             <h3>Business problems it can solve</h3>
             <ul className="project-detail-problems">
-              {project.problems.map((problem) => <li key={problem}><span aria-hidden="true">↗</span>{problem}</li>)}
+              {project.problems.map((problem, index) => <RevealOnScroll as="li" order={index} key={problem}><span aria-hidden="true">↗</span>{problem}</RevealOnScroll>)}
             </ul>
           </div>
         </section>
@@ -102,11 +103,11 @@ export default function ProjectDetails() {
           </div>
           <div className="project-detail-feature-grid">
             {project.features.map(([title, description], index) => (
-              <article className="project-detail-feature" key={title}>
+              <RevealOnScroll as="article" className="project-detail-feature" order={index} key={title}>
                 <span className="project-detail-feature-number">0{index + 1}</span>
                 <h3>{title}</h3>
                 <p>{description}</p>
-              </article>
+              </RevealOnScroll>
             ))}
           </div>
         </section>
@@ -118,10 +119,10 @@ export default function ProjectDetails() {
           </div>
           <div className="project-detail-gallery-grid">
             {project.gallery.map((item, index) => (
-              <figure className="project-detail-gallery-item" key={item.src}>
+              <RevealOnScroll as="figure" className="project-detail-gallery-item" order={index} key={item.src}>
                 <div className="project-detail-gallery-image"><img src={item.src} alt={item.alt} loading={index === 0 ? 'eager' : 'lazy'} /></div>
                 <figcaption><span>0{index + 1}</span>{item.caption}</figcaption>
-              </figure>
+              </RevealOnScroll>
             ))}
           </div>
         </section>
@@ -129,7 +130,7 @@ export default function ProjectDetails() {
         <section className="project-detail-stack" aria-labelledby="project-stack-title">
           <div><span className="project-detail-kicker">TECHNOLOGY</span><h2 id="project-stack-title">Built with a flexible foundation.</h2></div>
           <div className="project-detail-stack-list" aria-label="Technology stack">
-            {project.stack.map((technology) => <span key={technology}>{technology}</span>)}
+            {project.stack.map((technology, index) => <RevealOnScroll as="span" className="detail-stack-item" order={index} key={technology}>{technology}</RevealOnScroll>)}
           </div>
         </section>
 

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import LineReveal from './LineReveal'
 import RevealOnScroll from './RevealOnScroll'
 
-const services = [
+export const services = [
   { id: '01', title: 'Web Development', slug: 'web-development', desc: 'Modern, responsive websites and web applications built for performance, scalability, and growth.', image: '/images/service-web-development.jpg' },
   { id: '02', title: 'Software Development', slug: 'software-development', desc: 'Custom business software designed around your workflows, operations, and long-term goals.', image: '/images/service-software-development.png' },
   { id: '03', title: 'UI/UX Design', slug: 'ui-ux-design', desc: 'Clean, intuitive digital experiences that make complex products simple and enjoyable to use.', image: '/images/service-ui-ux.webp' },

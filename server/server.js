@@ -6,10 +6,8 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-// Basic health route
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }))
 
-// Contact route (placeholder)
 const contactRouter = require('./routes/contact')
 app.use('/api/contact', contactRouter)
 const adminRouter = require('./routes/admin')
@@ -20,6 +18,9 @@ app.use((err, req, res, next) => {
   if (res.headersSent) return next(err)
   if (err?.type === 'entity.parse.failed') {
     return res.status(400).json({ success: false, message: 'The inquiry request was not valid JSON. Please review the form and try again.' })
+  }
+  if (err?.type === 'entity.too.large') {
+    return res.status(413).json({ success: false, message: 'The request is too large. Please shorten your message and try again.' })
   }
   console.error('API request failed:', err?.name || 'Error', err?.type || 'UNEXPECTED_ERROR')
   return res.status(500).json({ success: false, message: 'We could not process your request right now. Please try again later.' })
@@ -41,7 +42,7 @@ async function startServer() {
       console.error('MongoDB connection failed. Inquiry emails will still be sent, but admin records are unavailable.')
     }
   } else {
-    console.warn('MongoDB is not configured; contact submissions will return HTTP 503.')
+    console.warn('MongoDB is not configured; contact emails can still be sent, but inquiries will not be available in the admin dashboard.')
   }
 
   if (!process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD || process.env.ADMIN_PASSWORD.length < 12) {

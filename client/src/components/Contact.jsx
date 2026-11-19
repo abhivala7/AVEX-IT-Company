@@ -78,7 +78,18 @@ export default function Contact() {
 
               <p className="muted contact-email"><LineReveal text="Email:" /> <span className="email-value"><LineReveal text="thymevala@gmail.com" /></span></p>
               <p className="muted"><LineReveal text="Phone:" /> <span className="email-value"><LineReveal text="+1 (555) 010-0000" /></span> <small className="demo-inline"><LineReveal text="Demo placeholder" /></small></p>
-              <p className="muted"><LineReveal text="Location: Remote-first — distributed team across US & EU" /></p>
+              <p className="muted">
+                <LineReveal text="Location:" />{' '}
+                <a
+                  className="contact-location-link"
+                  href="https://www.google.com/maps/search/?api=1&query=Ahmedabad%2C%20Gujarat%2C%20India"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Open Ahmedabad, Gujarat in Google Maps"
+                >
+                  <LineReveal text="Ahmedabad, Gujarat, India" />
+                </a>
+              </p>
               <p className="muted"><LineReveal text="Typical response time: 1–2 business days" /></p>
 
               <div className="contact-mini-links">
